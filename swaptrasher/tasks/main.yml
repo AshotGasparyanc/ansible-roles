@@ -3,6 +3,7 @@
     - name: disable the swap
       shell: swapoff -a
       when: ansible_facts.swaptotal_mb > 0
+      become: true
     
     # - name: Get the swapfile path
     #   command: swapon -s | awk 'NR==2 {print $1}'
@@ -14,6 +15,7 @@
         state: absent
         path: "{{ swapfile_path }}"
       when: ansible_facts.swaptotal_mb > 0
+      become: true
     
     - name: delete swap from fstab
       lineinfile:
@@ -21,5 +23,5 @@
         regexp: '^{{ swapfile_path }}.*$'
         state: absent
         backup: yes
-
+      become: true
 # tasks file for swaptrasher
