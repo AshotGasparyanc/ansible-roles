@@ -1,0 +1,6 @@
+---
+
+- name: set timezone to Asia/Yerevan
+  timezone: 
+    name: Asia/Yerevan
+# tasks file for common
