@@ -1,2 +1,6 @@
 ---
+swap_size: 0.5G
+region: "Asia"
+city: "Yerevan"
+swapfile_path: "/swapfile"
 # defaults file for common

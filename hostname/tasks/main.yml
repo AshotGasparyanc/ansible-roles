@@ -1,6 +1,0 @@
----
-
-- name: change server hostname
-  hostname:
-    name: prod
-# tasks file for hostname

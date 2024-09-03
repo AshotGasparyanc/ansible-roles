@@ -1,0 +1,25 @@
+---
+- block:
+    - name: disable the swap
+      shell: swapoff -a
+      when: ansible_facts.swaptotal_mb > 0
+    
+    - name: Get the swapfile path
+      command: swapon -s | awk 'NR==2 {print $1}'
+      register: swapfile_path
+      when: ansible_facts.swaptotal_mb > 0 
+
+    - name: Delete the swapfile
+      file:
+        state: absent
+        path: "{{ swapfile_path.stdout }}"
+      when: ansible_facts.swaptotal_mb > 0
+    
+    - name: delete swap from fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^{{ swapfile_path.stdout }}.*$'
+        state: absent
+        backup: yes
+
+# tasks file for swaptrasher
