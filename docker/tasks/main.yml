@@ -1,0 +1,41 @@
+---
+- block:
+  - name: add GPG key for docker
+    apt_key:
+      url: 'https://download.docker.com/linux/debian/gpg'
+      state: present
+
+  - name: add repositoyry for docker
+    apt_repository:
+      repo: 'deb [arch=arm64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable'
+      state: present
+  
+  - name: update cache
+    apt:
+      update_cache: yes
+
+  - name: install docker
+    apt: 
+      name: docker-ce
+      state: present
+  
+  - name: install docker
+    apt: 
+      name: docker-compose-plugin
+      state: present
+
+  - name: check docekr service
+    service:
+      name: docker
+      state: started
+      enabled: true
+  
+  - name: Add all users to the docker group
+    user:
+      name: "{{ item }}"
+      groups: docker
+      append: yes
+    loop: "{{ users }}"
+
+  become: true
+  # tasks file for docker

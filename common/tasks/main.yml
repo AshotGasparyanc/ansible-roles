@@ -14,13 +14,22 @@
     update_cache: yes
   become: true
 
+- name: installation packages
+  apt:
+    name:  "{{ item }}"
+    state: present
+    update_cache: yes
+# ignore_errors: true
+  loop:
+    - "{{ packages }}"
+  become: true
 
 - block:
     - name: create a swap file
       shell: fallocate -l {{ swap_size }} /swapfile
       args: 
         creates: /swapfile
-      become: true
+
 
     - name: set the correct permissions
       file:
@@ -28,17 +37,17 @@
         owner: root
         group: root
         mode: '0600'
-      become: true
+
 
     - name: make the file a swap file
       shell: mkswap /swapfile
       when: ansible_facts.swapfree_mb == 0
-      become: true
+
 
     - name: enable the swap file
       shell: swapon /swapfile
       when: ansible_facts.swapfree_mb == 0
-      become: true
+
 
     - name: add swap file to fstab
       mount:
@@ -49,6 +58,7 @@
         passno: 0
         dump: 0
         state: present
+
       become: true
         
 # tasks file for common
